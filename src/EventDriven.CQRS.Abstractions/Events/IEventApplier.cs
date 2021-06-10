@@ -1,10 +1,12 @@
 ﻿namespace EventDriven.CQRS.Abstractions.Events
 {
+
     /// <summary>
     /// Applies an event by muting entity state.
     /// </summary>
     /// <typeparam name="TEvent">The type of event.</typeparam>
-    public interface IEventApplier<in TEvent> where TEvent : class, IDomainEvent
+    /// <typeparam name="TId"></typeparam>
+    public interface IEventApplier<in TEvent, TId> where TEvent : class, IDomainEvent<TId>, IEvent<TId>
     {
         /// <summary>
         /// Applies a change to the given entity from the specified domain event.

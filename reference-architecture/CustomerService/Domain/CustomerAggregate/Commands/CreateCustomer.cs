@@ -2,5 +2,8 @@ using EventDriven.CQRS.Abstractions.Commands;
 
 namespace CustomerService.Domain.CustomerAggregate.Commands
 {
-    public record CreateCustomer(Customer Customer) : Command.Create(Customer.Id);
+
+    using System;
+
+    public record CreateCustomer(Customer Customer) : Command<Guid>.Create(Customer.Id);
 }

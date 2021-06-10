@@ -6,10 +6,10 @@ namespace EventDriven.CQRS.Abstractions.Events
     /// A statement of fact about what change has been made to the domain state.
     /// </summary>
     /// <param name="Source">The source of the event.</param>
-    public abstract record Event(string Source = null) : IEvent
+    public abstract record Event<TId>(string Source = null) : IEvent<TId>
     {
         /// <inheritdoc />
-        public Guid Id { get; init; } = Guid.NewGuid();
+        public TId Id { get; init; } = default;
 
         /// <inheritdoc />
         public DateTime CreatedAt { get; init; } = DateTime.UtcNow;

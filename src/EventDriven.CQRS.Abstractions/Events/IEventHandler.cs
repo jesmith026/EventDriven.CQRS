@@ -2,11 +2,13 @@
 
 namespace EventDriven.CQRS.Abstractions.Events
 {
+
     /// <summary>
     /// Event handler.
     /// </summary>
     /// <typeparam name="TEvent">The type of event.</typeparam>
-    public interface IEventHandler<in TEvent> where TEvent : class, IDomainEvent
+    /// <typeparam name="TId"></typeparam>
+    public interface IEventHandler<in TEvent, TId> where TEvent : class, IDomainEvent<TId>, IEvent<TId>
     {
         /// <summary>
         /// Handles an event.

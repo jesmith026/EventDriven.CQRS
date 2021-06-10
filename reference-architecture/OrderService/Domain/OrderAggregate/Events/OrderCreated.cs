@@ -2,5 +2,8 @@
 
 namespace OrderService.Domain.OrderAggregate.Events
 {
-    public record OrderCreated(Order Order) : DomainEvent(Order.Id);
+
+    using System;
+
+    public record OrderCreated(Order Order) : DomainEvent<Guid>(Order.Id);
 }

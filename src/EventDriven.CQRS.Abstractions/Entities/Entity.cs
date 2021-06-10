@@ -3,10 +3,10 @@
 namespace EventDriven.CQRS.Abstractions.Entities
 {
     /// <inheritdoc />
-    public abstract class Entity : IEntity
+    public abstract class Entity<TId> : IEntity<TId>
     {
         /// <inheritdoc />
-        public Guid Id { get; set; }
+        public TId Id { get; set; }
 
         /// <inheritdoc />
         public long SequenceNumber { get; set; }

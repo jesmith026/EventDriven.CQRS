@@ -5,12 +5,12 @@ namespace EventDriven.CQRS.Abstractions.Entities
     /// <summary>
     /// A type that has an identity with behavior and state that can change over time.
     /// </summary>
-    public interface IEntity
+    public interface IEntity<TId>
     {
         /// <summary>
         /// The ID of the Entity.
         /// </summary>
-        Guid Id { get; set; }
+        TId Id { get; set; }
 
         /// <summary>
         /// The sequence number (equal to the highest event sequence number applied).

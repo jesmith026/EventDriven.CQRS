@@ -14,8 +14,8 @@ namespace EventDriven.CQRS.Abstractions.Commands
     /// <summary>
     /// Represents the result of dispatching a command.
     /// </summary>
-    public record CommandResult<TEntity> : CommandResult
-        where TEntity : Entity
+    public record CommandResult<TEntity, TId> : CommandResult
+        where TEntity : IEntity<TId>
     {
         /// <summary>
         /// Entities associated with the result.

@@ -5,10 +5,10 @@ namespace EventDriven.CQRS.Abstractions.Commands
     /// <summary>
     /// Represents a command.
     /// </summary>
-    public record Command : ICommand
+    public record Command<TEntityId> : ICommand<TEntityId>
     {
         /// <inheritdoc />
-        public Guid EntityId => default(Guid);
+        public TEntityId EntityId => default(TEntityId);
 
         /// <inheritdoc />
         public string EntityEtag { get; set; }
@@ -21,7 +21,7 @@ namespace EventDriven.CQRS.Abstractions.Commands
         /// </summary>
         /// <param name="EntityId">Represents the ID of the entity the command is in reference to.</param>
         public abstract record Create(
-            Guid EntityId = default) : ICommand
+            TEntityId EntityId = default) : ICommand<TEntityId>
         {
             /// <inheritdoc />
             public string EntityEtag { get; set; }
@@ -36,8 +36,8 @@ namespace EventDriven.CQRS.Abstractions.Commands
         /// <param name="EntityId">Represents the ID of the entity the command is in reference to.</param>
         /// <param name="EntityEtag">If provided, refers to the version of the entity to update.</param>
         public abstract record Update(
-            Guid EntityId,
-            string EntityEtag = null) : ICommand
+            TEntityId EntityId,
+            string EntityEtag = null) : ICommand<TEntityId>
         {
             /// <inheritdoc />
             public string EntityEtag { get; set; } = EntityEtag;
@@ -52,8 +52,8 @@ namespace EventDriven.CQRS.Abstractions.Commands
         /// <param name="EntityId">Represents the ID of the entity the command is in reference to.</param>
         /// <param name="EntityEtag">If provided, refers to the version of the entity to update.</param>
         public abstract record Remove(
-            Guid EntityId,
-            string EntityEtag = null) : ICommand
+            TEntityId EntityId,
+            string EntityEtag = null) : ICommand<TEntityId>
         {
             /// <inheritdoc />
             public string EntityEtag { get; set; } = EntityEtag;

@@ -8,9 +8,9 @@ namespace EventDriven.CQRS.Abstractions.Events
     /// <param name="EntityId">The id of the entity that this event is "about".</param>
     /// <param name="EntityETag">A unique ID that must change atomically with each store of the entity.</param>
     /// <param name="EntitySequenceNumber">Indicates this is the nth event related to a specific EntityId.</param>
-    public abstract record DomainEvent(
-            Guid EntityId,
+    public abstract record DomainEvent<TId>(
+            TId EntityId,
             string EntityETag = null,
             long EntitySequenceNumber = 0)
-        : Event, IDomainEvent;
+        : Event<TId>, IDomainEvent<TId>;
 }

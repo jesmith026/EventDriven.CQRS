@@ -32,4 +32,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mediatr" Version="9.0.0" />
+  </ItemGroup>
+
 </Project>

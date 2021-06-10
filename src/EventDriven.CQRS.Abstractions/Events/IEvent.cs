@@ -5,12 +5,12 @@ namespace EventDriven.CQRS.Abstractions.Events
     /// <summary>
     /// A statement of fact about what change has been made to the domain state.
     /// </summary>
-    public interface IEvent
+    public interface IEvent<TId>
     {
         /// <summary>
         /// Unique ID of the event.
         /// </summary>
-        Guid Id { get; }
+        TId Id { get; }
 
         /// <summary>
         /// Time at which the event was created.

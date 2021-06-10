@@ -9,17 +9,17 @@ using EventDriven.CQRS.Abstractions.Events;
 namespace CustomerService.Domain.CustomerAggregate
 {
     public class Customer : 
-        Entity,
-        ICommandProcessor<CreateCustomer>,
-        IEventApplier<CustomerCreated>
+        Entity<Guid>,
+        ICommandProcessor<CreateCustomer, Guid>,
+        IEventApplier<CustomerCreated, Guid>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Address ShippingAddress { get; set; }
 
-        public IEnumerable<IDomainEvent> Process(CreateCustomer command)
+        public IEnumerable<IDomainEvent<Guid>> Process(CreateCustomer command)
             // To process command, return one or more domain events
-            => new List<IDomainEvent>
+            => new List<IDomainEvent<Guid>>
             {
                 new CustomerCreated(command.Customer)
             };

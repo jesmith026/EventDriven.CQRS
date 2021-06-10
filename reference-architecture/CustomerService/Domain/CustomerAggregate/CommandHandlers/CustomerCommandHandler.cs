@@ -12,10 +12,13 @@ using Integration = Common.Integration;
 
 namespace CustomerService.Domain.CustomerAggregate.CommandHandlers
 {
+
+    using System;
+
     public class CustomerCommandHandler :
-        ICommandHandler<Customer, CreateCustomer>,
-        ICommandHandler<Customer, UpdateCustomer>,
-        ICommandHandler<Customer, RemoveCustomer>
+        ICommandHandler<Customer, Guid, CreateCustomer>,
+        ICommandHandler<Customer, Guid, UpdateCustomer>,
+        ICommandHandler<Customer, Guid, RemoveCustomer>
     {
         private readonly ICustomerRepository _repository;
         private readonly IEventBus _eventBus;
@@ -34,7 +37,7 @@ namespace CustomerService.Domain.CustomerAggregate.CommandHandlers
             _logger = logger;
         }
 
-        public async Task<CommandResult<Customer>> Handle(CreateCustomer command)
+        public async Task<CommandResult<Customer, Guid>> Handle(CreateCustomer command)
         {
             // Process command
             _logger.LogInformation("Handling command: {CommandName}", nameof(CreateCustomer));
@@ -42,16 +45,16 @@ namespace CustomerService.Domain.CustomerAggregate.CommandHandlers
             
             // Apply events
             var domainEvent = events.OfType<CustomerCreated>().SingleOrDefault();
-            if (domainEvent == null) return new CommandResult<Customer>(CommandOutcome.NotHandled);
+            if (domainEvent == null) return new CommandResult<Customer, Guid>(CommandOutcome.NotHandled);
             command.Customer.Apply(domainEvent);
             
             // Persist entity
             var entity = await _repository.Add(command.Customer);
-            if (entity == null) return new CommandResult<Customer>(CommandOutcome.InvalidCommand);
-            return new CommandResult<Customer>(CommandOutcome.Accepted, entity);
+            if (entity == null) return new CommandResult<Customer, Guid>(CommandOutcome.InvalidCommand);
+            return new CommandResult<Customer, Guid>(CommandOutcome.Accepted, entity);
         }
 
-        public async Task<CommandResult<Customer>> Handle(UpdateCustomer command)
+        public async Task<CommandResult<Customer, Guid>> Handle(UpdateCustomer command)
         {
             // Compare shipping addresses
             _logger.LogInformation("Handling command: {CommandName}", nameof(UpdateCustomer));
@@ -62,7 +65,7 @@ namespace CustomerService.Domain.CustomerAggregate.CommandHandlers
             {
                 // Persist entity
                 var entity = await _repository.Update(command.Customer);
-                if (entity == null) return new CommandResult<Customer>(CommandOutcome.NotFound);
+                if (entity == null) return new CommandResult<Customer, Guid>(CommandOutcome.NotFound);
                 
                 // Publish events
                 if (addressChanged)
@@ -73,20 +76,20 @@ namespace CustomerService.Domain.CustomerAggregate.CommandHandlers
                         new CustomerAddressUpdated(entity.Id, shippingAddress),
                         null, "v1");
                 }
-                return new CommandResult<Customer>(CommandOutcome.Accepted, entity);
+                return new CommandResult<Customer, Guid>(CommandOutcome.Accepted, entity);
             }
             catch (ConcurrencyException)
             {
-                return new CommandResult<Customer>(CommandOutcome.Conflict);
+                return new CommandResult<Customer, Guid>(CommandOutcome.Conflict);
             }
         }
 
-        public async Task<CommandResult<Customer>> Handle(RemoveCustomer command)
+        public async Task<CommandResult<Customer, Guid>> Handle(RemoveCustomer command)
         {
             // Persist entity
             _logger.LogInformation("Handling command: {CommandName}", nameof(RemoveCustomer));
             await _repository.Remove(command.EntityId);
-            return new CommandResult<Customer>(CommandOutcome.Accepted);
+            return new CommandResult<Customer, Guid>(CommandOutcome.Accepted);
         }
     }
 }

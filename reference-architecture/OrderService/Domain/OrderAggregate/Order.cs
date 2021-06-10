@@ -9,13 +9,13 @@ using OrderService.Domain.OrderAggregate.Events;
 namespace OrderService.Domain.OrderAggregate
 {
     public class Order : 
-        Entity,
-        ICommandProcessor<CreateOrder>,
-        IEventApplier<OrderCreated>,
-        ICommandProcessor<ShipOrder>,
-        IEventApplier<OrderShipped>,
-        ICommandProcessor<CancelOrder>,
-        IEventApplier<OrderCancelled>
+        Entity<Guid>,
+        ICommandProcessor<CreateOrder, Guid>,
+        IEventApplier<OrderCreated, Guid>,
+        ICommandProcessor<ShipOrder, Guid>,
+        IEventApplier<OrderShipped, Guid>,
+        ICommandProcessor<CancelOrder, Guid>,
+        IEventApplier<OrderCancelled, Guid>
     {
         public Guid CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
@@ -23,9 +23,9 @@ namespace OrderService.Domain.OrderAggregate
         public Address ShippingAddress { get; set; }
         public OrderState OrderState { get; set; }
 
-        public IEnumerable<IDomainEvent> Process(CreateOrder command)
+        public IEnumerable<IDomainEvent<Guid>> Process(CreateOrder command)
             // To process command, return one or more domain events
-            => new List<IDomainEvent>
+            => new List<IDomainEvent<Guid>>
             {
                 new OrderCreated(command.Order)
             };
@@ -34,9 +34,9 @@ namespace OrderService.Domain.OrderAggregate
             // Set Id
             Id = domainEvent.EntityId != default(Guid) ? domainEvent.EntityId : Guid.NewGuid();
 
-        public IEnumerable<IDomainEvent> Process(ShipOrder command)
+        public IEnumerable<IDomainEvent<Guid>> Process(ShipOrder command)
             // To process command, return one or more domain events
-            => new List<IDomainEvent>
+            => new List<IDomainEvent<Guid>>
             {
                 new OrderShipped(command.EntityId, command.ETag)
             };
@@ -48,9 +48,9 @@ namespace OrderService.Domain.OrderAggregate
             ETag = domainEvent.ETag;
         }
 
-        public IEnumerable<IDomainEvent> Process(CancelOrder command)
+        public IEnumerable<IDomainEvent<Guid>> Process(CancelOrder command)
             // To process command, return one or more domain events
-            => new List<IDomainEvent>
+            => new List<IDomainEvent<Guid>>
             {
                 new OrderCancelled(command.EntityId, command.EntityEtag)
             };
