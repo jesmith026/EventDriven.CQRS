@@ -3,7 +3,7 @@
 An event-driven approach to Command Query Responsibility Segregation.
 
 ## Prerequisites
-- [.NET Core SDK](https://dotnet.microsoft.com/download) (5.0 or greater)
+- [.NET Core SDK](https://dotnet.microsoft.com/download) (6.0 or greater)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - MongoDB Docker: `docker run --name mongo -d -p 27017:27017 -v /tmp/mongo/data:/data/db mongo`
 - [MongoDB Client](https://robomongo.org/download):
